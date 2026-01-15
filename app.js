@@ -7,6 +7,8 @@ import {
 } from 'discord-interactions';
 import { handleAddCommand } from './commands/suggestions/add/addSuggestionCommandHandler.js';
 import { COMMANDS_NAMES } from './constants.js';
+import fs, { access, constants } from 'fs';
+import path from 'path';
 
 const app = express();
 const port = 3000;
@@ -35,6 +37,15 @@ app.post('/interactions', async function (req, res) {
 
   console.error('unknown interaction type', type);
   return res.status(400).json({ error: 'unknown interaction type' });
+});
+
+const suggestionsFilePath = path.join(path.resolve(), 'suggestions.csv');
+
+access(suggestionsFilePath, constants.F_OK, (err) => {
+  // if file doesn't exist, create it
+  if (err) {
+    fs.writeFileSync(suggestionsFilePath, 'movie,watched,participated,season', { flag: 'w' });
+  }
 });
 
 app.listen(port, () => {
