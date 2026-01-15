@@ -1,5 +1,13 @@
 export const DISCORD_URL = 'https://discord.com/api/v10/';
 
 export const COMMANDS_NAMES = {
-  TEST: 'hello'
+  ADD_SUGGESTION: 'suggestion-add'
 };
+
+export const COMMAND_OPTION_TYPES = {
+  SUB_COMMAND: 1,
+  SUB_COMMAND_GROUP: 2,
+  STRING: 3,
+  INTEGER: 4,
+  BOOLEAN: 5
+}

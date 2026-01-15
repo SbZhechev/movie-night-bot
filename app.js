@@ -5,16 +5,13 @@ import {
   InteractionType,
   verifyKeyMiddleware
 } from 'discord-interactions';
-import { handleTestCommand } from './commandHandlers.js';
+import { handleAddCommand } from './commands/suggestions/add/addSuggestionCommandHandler.js';
+import { COMMANDS_NAMES } from './constants.js';
 
 const app = express();
 const port = 3000;
 
 app.use(verifyKeyMiddleware(process.env.PUBLIC_KEY));
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
 
 app.post('/interactions', async function (req, res) {
   const { id, type, data } = req.body;
@@ -28,8 +25,8 @@ app.post('/interactions', async function (req, res) {
   if (type === InteractionType.APPLICATION_COMMAND) {
     const { name } = data;
     switch (name) {
-      case 'hello':
-        return handleTestCommand(res);
+      case COMMANDS_NAMES.ADD_SUGGESTION:
+        return handleAddCommand(res, data);
       default:
         console.error(`unknown command: ${name}`);
         return res.status(400).json({ error: 'unknown command' });
