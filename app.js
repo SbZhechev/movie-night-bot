@@ -1,11 +1,11 @@
 import 'dotenv/config';
 import express from 'express';
 import {
-  InteractionResponseFlags,
   InteractionResponseType,
   InteractionType,
-  MessageComponentTypes, verifyKeyMiddleware
+  verifyKeyMiddleware
 } from 'discord-interactions';
+import { handleTestCommand } from './commandHandlers.js';
 
 const app = express();
 const port = 3000;
@@ -17,42 +17,23 @@ app.get('/', (req, res) => {
 });
 
 app.post('/interactions', async function (req, res) {
-  // Interaction id, type and data
   const { id, type, data } = req.body;
 
-  /**
-   * Handle verification requests
-   */
+  // Handle verification requests
   if (type === InteractionType.PING) {
     return res.send({ type: InteractionResponseType.PONG });
   }
 
-  /**
-   * Handle slash command requests
-   * See https://discord.com/developers/docs/interactions/application-commands#slash-commands
-   */
+  // Handle slash command requests
   if (type === InteractionType.APPLICATION_COMMAND) {
     const { name } = data;
-    // "test" command
-    if (name === 'hello') {
-      // Send a message into the channel where command was triggered from
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-          components: [
-            {
-              type: MessageComponentTypes.TEXT_DISPLAY,
-              // Fetches a random emoji to send from a helper function
-              content: `world`
-            }
-          ]
-        },
-      });
+    switch (name) {
+      case 'hello':
+        return handleTestCommand(res);
+      default:
+        console.error(`unknown command: ${name}`);
+        return res.status(400).json({ error: 'unknown command' });
     }
-
-    console.error(`unknown command: ${name}`);
-    return res.status(400).json({ error: 'unknown command' });
   }
 
   console.error('unknown interaction type', type);

@@ -1,7 +1,8 @@
+import { COMMANDS_NAMES } from "./constants.js";
 import { InstallGlobalCommands } from "./utils.js";
 
 const TEST_COMMAND = {
-  name: 'hello',
+  name: COMMANDS_NAMES.TEST,
   description: "Simple test command",
   type: 1
 };
