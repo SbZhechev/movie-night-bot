@@ -1,0 +1,19 @@
+{
+  "name": "movie-night-bot",
+  "version": "1.0.0",
+  "description": "Discord bot for managing movie nights",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --watch app.js",
+    "register-commands": "node commands.js"
+  },
+  "author": "stambeto",
+  "license": "ISC",
+  "dependencies": {
+    "discord-interactions": "^4.4.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "node-fetch": "^3.3.2"
+  }
+}
