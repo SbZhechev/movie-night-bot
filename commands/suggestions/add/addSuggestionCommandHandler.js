@@ -11,8 +11,8 @@ export const handleAddCommand = (res, data) => {
     let result = parseOptions(data.options);
 
     let fileContent = fs.readFileSync('./suggestions.csv', { encoding: 'utf8' });
-    if (fileContent.toLowerCase().includes(result.optionsValues.movie.toLowerCase())) {
-      throw new DuplicateError(`${result.optionsValues.movie} is already in the list!`);
+    if (fileContent.toLowerCase().includes(result.optionsValues.title.toLowerCase())) {
+      throw new DuplicateError(`${result.optionsValues.title} is already in the list!`);
     }
 
     fs.appendFileSync('./suggestions.csv', result.toString());
@@ -25,7 +25,7 @@ export const handleAddCommand = (res, data) => {
         components: [
           {
             type: MessageComponentTypes.TEXT_DISPLAY,
-            content: `${result.optionsValues.movie} added to the list!`
+            content: `${result.optionsValues.title} added to the list!`
           }
         ]
       }
@@ -55,17 +55,17 @@ export const handleAddCommand = (res, data) => {
 
 const parseOptions = (options) => {
   let optionsValues = {
-    movie: '',
+    title: '',
     watched: false,
     participated: false,
-    season: 'none'
+    theme: 'none'
   };
 
   options.forEach(option => optionsValues[option.name] = option.value);
 
   let result = {
     optionsValues,
-    toString: () => `\n${optionsValues.movie},${optionsValues.watched},${optionsValues.participated},${optionsValues.season}`
+    toString: () => `\n${optionsValues.title},${optionsValues.watched},${optionsValues.participated},${optionsValues.theme}`
   };
 
   return result;

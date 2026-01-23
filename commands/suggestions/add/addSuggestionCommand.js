@@ -6,7 +6,7 @@ export const ADD_SUGGESTION_COMMAND = {
   type: COMMAND_OPTION_TYPES.SUB_COMMAND,
   options: [
     {
-      name: 'movie',
+      name: 'title',
       description: 'The title of the movie to add',
       type: COMMAND_OPTION_TYPES.STRING,
       required: true
@@ -24,8 +24,8 @@ export const ADD_SUGGESTION_COMMAND = {
       required: false
     },
     {
-      name: 'season',
-      description: 'What season is the movie tailored for (i.e. Christmas)',
+      name: 'theme',
+      description: 'Theme/genre of the movie (i.e. Christmas/Action/Horror)',
       type: COMMAND_OPTION_TYPES.STRING,
       required: false
     }

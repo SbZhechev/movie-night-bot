@@ -44,7 +44,7 @@ const suggestionsFilePath = path.join(path.resolve(), 'suggestions.csv');
 access(suggestionsFilePath, constants.F_OK, (err) => {
   // if file doesn't exist, create it
   if (err) {
-    fs.writeFileSync(suggestionsFilePath, 'movie,watched,participated,season', { flag: 'w' });
+    fs.writeFileSync(suggestionsFilePath, 'movie,watched,participated,theme', { flag: 'w' });
   }
 });
 
