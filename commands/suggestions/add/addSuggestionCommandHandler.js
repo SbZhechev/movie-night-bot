@@ -5,19 +5,20 @@ import {
 } from 'discord-interactions';
 import fs from 'fs';
 import { DuplicateError } from '../../../duplicateError.js';
+import { suggestionsFilePath } from '../../../fileUtils.js';
 
 export const handleAddCommand = (res, data) => {
   try {
     let result = parseOptions(data.options);
 
-    let fileContent = fs.readFileSync('./suggestions.csv', { encoding: 'utf8' });
+    let fileContent = fs.readFileSync(suggestionsFilePath, { encoding: 'utf8' });
     if (fileContent.toLowerCase().includes(result.optionsValues.title.toLowerCase())) {
       throw new DuplicateError(`${result.optionsValues.title} is already in the list!`);
     }
 
-    fs.appendFileSync('./suggestions.csv', result.toString());
+    fs.appendFileSync(suggestionsFilePath, result.toString());
 
-    console.log(`Movie added!`);
+    console.log(`${result.optionsValues.title} added to the list!`);
     return res.send({
       type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
       data: {
@@ -31,25 +32,25 @@ export const handleAddCommand = (res, data) => {
       }
     });
   } catch (error) {
+    let errorMessage = 'Unexpected error occured while adding a suggestion!';
     if (error instanceof DuplicateError) {
-      console.error(error.message);
-
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-          components: [
-            {
-              type: MessageComponentTypes.TEXT_DISPLAY,
-              content: error.message
-            }
-          ]
-        }
-      });
+      errorMessage = error.message
+    } else {
+      console.error(error);
     }
 
-    console.error(error);
-    return res.status(500).json('Error occured while adding a suggestion!');
+    return res.send({
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      data: {
+        flags: InteractionResponseFlags.IS_COMPONENTS_V2,
+        components: [
+          {
+            type: MessageComponentTypes.TEXT_DISPLAY,
+            content: errorMessage
+          }
+        ]
+      }
+    });
   }
 }
 
