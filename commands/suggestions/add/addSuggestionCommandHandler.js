@@ -1,11 +1,7 @@
-import {
-  InteractionResponseFlags,
-  InteractionResponseType,
-  MessageComponentTypes,
-} from 'discord-interactions';
 import fs from 'fs';
 import { DuplicateError } from '../../../duplicateError.js';
 import { suggestionsFilePath } from '../../../fileUtils.js';
+import { createBasicMessageComponent } from '../../../discordUtils.js';
 
 export const handleAddCommand = (res, data) => {
   try {
@@ -19,18 +15,7 @@ export const handleAddCommand = (res, data) => {
     fs.appendFileSync(suggestionsFilePath, result.toString());
 
     console.log(`${result.optionsValues.title} added to the list!`);
-    return res.send({
-      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-      data: {
-        flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-        components: [
-          {
-            type: MessageComponentTypes.TEXT_DISPLAY,
-            content: `${result.optionsValues.title} added to the list!`
-          }
-        ]
-      }
-    });
+    return res.send(createBasicMessageComponent(`${result.optionsValues.title} added to the list!`));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while adding a suggestion!';
     if (error instanceof DuplicateError) {
@@ -39,18 +24,7 @@ export const handleAddCommand = (res, data) => {
       console.error(error);
     }
 
-    return res.send({
-      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-      data: {
-        flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-        components: [
-          {
-            type: MessageComponentTypes.TEXT_DISPLAY,
-            content: errorMessage
-          }
-        ]
-      }
-    });
+    return res.send(createBasicMessageComponent(errorMessage));
   }
 }
 

@@ -1,10 +1,6 @@
 import { parseSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
-import {
-  InteractionResponseFlags,
-  InteractionResponseType,
-  MessageComponentTypes,
-} from 'discord-interactions';
 import { NotFoundError } from "../../../notFoundError.js";
+import { createBasicMessageComponent } from "../../../discordUtils.js";
 
 export const handleMoveCommand = (res, data) => {
   try {
@@ -30,18 +26,7 @@ export const handleMoveCommand = (res, data) => {
     updateSuggestionsFile(movies);
 
     console.log(`${movieTitle} moved to the ${newPosition} of the list!`);
-    return res.send({
-      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-      data: {
-        flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-        components: [
-          {
-            type: MessageComponentTypes.TEXT_DISPLAY,
-            content: `${movieTitle} moved to the ${newPosition} of the list!`
-          }
-        ]
-      }
-    });
+    return res.send(createBasicMessageComponent(`${movieTitle} moved to the ${newPosition} of the list!`));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while moving a suggestion!';
 
@@ -51,18 +36,7 @@ export const handleMoveCommand = (res, data) => {
       console.error(error);
     }
 
-    return res.send({
-      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-      data: {
-        flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-        components: [
-          {
-            type: MessageComponentTypes.TEXT_DISPLAY,
-            content: errorMessage
-          }
-        ]
-      }
-    });
+    return res.send(createBasicMessageComponent(errorMessage));
   }
 }
 
