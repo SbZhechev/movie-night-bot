@@ -7,6 +7,7 @@ import {
 } from 'discord-interactions';
 import { handleAddCommand } from './commands/suggestions/add/addSuggestionCommandHandler.js';
 import { handleMoveCommand } from './commands/suggestions/move/moveSuggestionCommandHandler.js';
+import { handleDeleteComman } from './commands/suggestions/delete/deleteSuggestionCommandHandler.js';
 import { COMMANDS_NAMES } from './constants.js';
 import fs, { access, constants } from 'fs';
 import { suggestionsFilePath } from './fileUtils.js';
@@ -32,6 +33,8 @@ app.post('/interactions', async function (req, res) {
         return handleAddCommand(res, data);
       case COMMANDS_NAMES.MOVE_SUGGESTION:
         return handleMoveCommand(res, data);
+      case COMMANDS_NAMES.DELETE_SUGGESTION:
+        return handleDeleteComman(res, data);
       default:
         console.error(`unknown command: ${name}`);
         return res.status(400).json({ error: 'unknown command' });

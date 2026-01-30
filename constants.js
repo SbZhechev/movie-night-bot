@@ -2,7 +2,8 @@ export const DISCORD_URL = 'https://discord.com/api/v10/';
 
 export const COMMANDS_NAMES = {
   ADD_SUGGESTION: 'suggestion-add',
-  MOVE_SUGGESTION: 'suggestion-move'
+  MOVE_SUGGESTION: 'suggestion-move',
+  DELETE_SUGGESTION: 'suggestion-delete'
 };
 
 export const COMMAND_OPTION_TYPES = {
