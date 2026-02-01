@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { EOL } from 'os';
+import { NotFoundError } from './notFoundError.js';
 
 export const suggestionsFilePath = path.join(path.resolve(), 'suggestions.csv');
 
@@ -26,4 +27,24 @@ export const updateSuggestionsFile = (newContentArray) => {
   const content = newContentArray.join(EOL);
 
   fs.writeFileSync(suggestionsFilePath, content);
+}
+
+export const getMoviesForPoll = ({ size, participated, theme }) => {
+  let movies = parseSuggestionsFile();
+
+  movies = movies.filter(movie => {
+    const notWatched = movie.watched === 'false';
+    const participationMatches = participated ? true : movie.participated === 'false';
+    const themeMatches = theme ?
+      movie.theme.toLowerCase() === theme.toLowerCase() :
+      movie.theme.toLowerCase() !== 'christmas';
+
+    return notWatched && participationMatches && themeMatches;
+  });
+
+  if (movies.length === 0) {
+    throw new NotFoundError('No movie meets the requirements! You can try setting participated option to true or use different theme.');
+  }
+
+  return movies.slice(0, size);
 }

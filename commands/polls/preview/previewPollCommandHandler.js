@@ -1,31 +1,15 @@
 import { createBasicMessageComponent } from "../../../discordUtils.js";
-import { parseSuggestionsFile } from "../../../fileUtils.js";
+import { getMoviesForPoll } from "../../../fileUtils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { InteractionResponseFlags, InteractionResponseType, MessageComponentTypes } from "discord-interactions";
 
 export const handlePreviewCommand = (res, data) => {
   try {
     const { size, theme, participated } = parseOptions(data.options);
-    let movies = parseSuggestionsFile();
-
-    movies = movies.filter(movie => {
-      const notWatched = movie.watched === 'false';
-      const participationMatches = participated ? true : movie.participated === 'false';
-      const themeMatches = theme ?
-        movie.theme.toLowerCase() === theme.toLowerCase() :
-        movie.theme.toLowerCase() !== 'christmas';
-
-      return notWatched && participationMatches && themeMatches;
-    });
-
-    if (movies.length === 0) {
-      throw new NotFoundError('No movie meets the requirements! You can try setting participated option to true or use different theme.');
-    }
+    let pollCandidates = getMoviesForPoll({ size, participated, theme });
 
     let moviesList = '';
-    movies
-      .slice(0, size)
-      .forEach(movie => moviesList += `- ${movie.title}\n`);
+    pollCandidates.forEach(movie => moviesList += `- ${movie.title}\n`);
 
     return res.send(
       {
