@@ -4,7 +4,8 @@ export const COMMANDS_NAMES = {
   ADD_SUGGESTION: 'suggestion-add',
   MOVE_SUGGESTION: 'suggestion-move',
   DELETE_SUGGESTION: 'suggestion-delete',
-  PREVIEW_POLL: 'poll-preview'
+  PREVIEW_POLL: 'poll-preview',
+  CREATE_POLL: 'poll-create'
 };
 
 export const COMMAND_OPTION_TYPES = {

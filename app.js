@@ -9,6 +9,7 @@ import { handleAddCommand } from './commands/suggestions/add/addSuggestionComman
 import { handleMoveCommand } from './commands/suggestions/move/moveSuggestionCommandHandler.js';
 import { handleDeleteComman } from './commands/suggestions/delete/deleteSuggestionCommandHandler.js';
 import { handlePreviewCommand } from './commands/polls/preview/previewPollCommandHandler.js';
+import { handleCreatePollCommand } from './commands/polls/create/createPollCommandHandler.js';
 import { COMMANDS_NAMES } from './constants.js';
 import fs, { access, constants } from 'fs';
 import { suggestionsFilePath } from './fileUtils.js';
@@ -19,7 +20,7 @@ const port = 3000;
 app.use(verifyKeyMiddleware(process.env.PUBLIC_KEY));
 
 app.post('/interactions', async function (req, res) {
-  const { id, type, data } = req.body;
+  const { id, type, data, channel_id } = req.body;
 
   // Handle verification requests
   if (type === InteractionType.PING) {
@@ -38,6 +39,8 @@ app.post('/interactions', async function (req, res) {
         return handleDeleteComman(res, data);
       case COMMANDS_NAMES.PREVIEW_POLL:
         return handlePreviewCommand(res, data);
+      case COMMANDS_NAMES.CREATE_POLL:
+        return handleCreatePollCommand(res, data, channel_id);
       default:
         console.error(`unknown command: ${name}`);
         return res.status(400).json({ error: 'unknown command' });

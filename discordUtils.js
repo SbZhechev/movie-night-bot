@@ -53,3 +53,16 @@ export function createBasicMessageComponent(message) {
     }
   }
 }
+
+export async function createPollMessage(channelId, poll) {
+  const endpoint = `channels/${channelId}/messages`;
+  const options = {
+    method: 'POST',
+    body: {
+      content: '@everyone New movie night poll is up!',
+      poll
+    }
+  }
+
+  await DiscordRequest(endpoint, options);
+}
