@@ -48,7 +48,7 @@ app.post('/interactions', async function (req, res) {
 access(suggestionsFilePath, constants.F_OK, (err) => {
   // if file doesn't exist, create it
   if (err) {
-    fs.writeFileSync(suggestionsFilePath, 'movie,watched,participated,theme', { flag: 'w' });
+    fs.writeFileSync(suggestionsFilePath, 'title,watched,participated,theme', { flag: 'w' });
   }
 });
 

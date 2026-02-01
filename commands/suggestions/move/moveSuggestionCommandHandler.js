@@ -1,4 +1,4 @@
-import { parseSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
+import { readSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { createBasicMessageComponent } from "../../../discordUtils.js";
 
@@ -6,7 +6,7 @@ export const handleMoveCommand = (res, data) => {
   try {
     const { title: movieTitle, to: newPosition } = parseOptions(data.options);
 
-    const movies = parseSuggestionsFile();
+    const movies = readSuggestionsFile();
     const movieIndex = movies.findIndex(movie => movie.includes(movieTitle));
 
     if (movieIndex < 0) throw new NotFoundError(`${movieTitle} is not in the list!`);

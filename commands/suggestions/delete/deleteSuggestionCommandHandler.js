@@ -1,11 +1,11 @@
-import { parseSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
+import { readSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { createBasicMessageComponent } from "../../../discordUtils.js";
 
 export const handleDeleteComman = (res, data) => {
   try {
     let movieTitle = data.options[0].value;
-    let movies = parseSuggestionsFile();
+    let movies = readSuggestionsFile();
 
     let movieIndex = movies.findIndex(movie => movie.includes(movieTitle));
 
