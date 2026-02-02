@@ -7,6 +7,7 @@ import {
 } from 'discord-interactions';
 import { handleAddCommand } from './commands/suggestions/add/addSuggestionCommandHandler.js';
 import { handleMoveCommand } from './commands/suggestions/move/moveSuggestionCommandHandler.js';
+import { handleEditCommand } from './commands/suggestions/edit/editSuggestionCommandHandler.js';
 import { handleDeleteCommand } from './commands/suggestions/delete/deleteSuggestionCommandHandler.js';
 import { handlePreviewCommand } from './commands/polls/preview/previewPollCommandHandler.js';
 import { handleCreatePollCommand } from './commands/polls/create/createPollCommandHandler.js';
@@ -35,6 +36,8 @@ app.post('/interactions', async function (req, res) {
         return handleAddCommand(res, data);
       case COMMANDS_NAMES.MOVE_SUGGESTION:
         return handleMoveCommand(res, data);
+      case COMMANDS_NAMES.EDIT_SUGGESTION:
+        return handleEditCommand(res, data);
       case COMMANDS_NAMES.DELETE_SUGGESTION:
         return handleDeleteCommand(res, data);
       case COMMANDS_NAMES.PREVIEW_POLL:
