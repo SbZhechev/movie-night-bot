@@ -28,6 +28,12 @@ export const ADD_SUGGESTION_COMMAND = {
       description: 'Theme/genre of the movie (i.e. Christmas/Action/Horror)',
       type: COMMAND_OPTION_TYPES.STRING,
       required: false
+    },
+    {
+      name: 'position',
+      description: 'Position in the list to add the movie at',
+      type: COMMAND_OPTION_TYPES.INTEGER,
+      required: false
     }
   ]
 };

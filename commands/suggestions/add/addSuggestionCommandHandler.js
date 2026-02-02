@@ -1,22 +1,26 @@
-import fs from 'fs';
 import { DuplicateError } from '../../../duplicateError.js';
-import { suggestionsFilePath } from '../../../fileUtils.js';
+import { parseSuggestionsFile, updateSuggestionsFile } from '../../../fileUtils.js';
 import { createBasicMessageComponent } from '../../../discordUtils.js';
-import { EOL } from 'os';
 
 export const handleAddCommand = (res, data) => {
   try {
-    let result = parseOptions(data.options);
+    let { title, watched, participated, theme, position } = parseOptions(data.options);
 
-    let fileContent = fs.readFileSync(suggestionsFilePath, { encoding: 'utf8' });
-    if (fileContent.toLowerCase().includes(result.optionsValues.title.toLowerCase())) {
-      throw new DuplicateError(`${result.optionsValues.title} is already in the list!`);
+    let movies = parseSuggestionsFile();
+    if (movies.some(movie => movie.title.toLowerCase() === title.toLowerCase())) {
+      throw new DuplicateError(`${title} is already in the list!`);
     }
 
-    fs.appendFileSync(suggestionsFilePath, result.toString());
+    let newSuggestion = { title, watched, participated, theme };
+    if (!position) {
+      movies.push(newSuggestion);
+    } else {
+      movies.splice(position - 1, 0, newSuggestion);
+    }
 
-    console.log(`${result.optionsValues.title} added to the list!`);
-    return res.send(createBasicMessageComponent(`${result.optionsValues.title} added to the list!`));
+    updateSuggestionsFile(movies);
+    console.log(`${title} added to the list!`);
+    return res.send(createBasicMessageComponent(`${title} added to the list!`));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while adding a suggestion!';
     if (error instanceof DuplicateError) {
@@ -34,15 +38,11 @@ const parseOptions = (options) => {
     title: '',
     watched: false,
     participated: false,
-    theme: 'none'
+    theme: 'none',
+    position: null
   };
 
   options.forEach(option => optionsValues[option.name] = option.value);
 
-  let result = {
-    optionsValues,
-    toString: () => `${EOL}${optionsValues.title},${optionsValues.watched},${optionsValues.participated},${optionsValues.theme}`
-  };
-
-  return result;
+  return optionsValues;
 }
