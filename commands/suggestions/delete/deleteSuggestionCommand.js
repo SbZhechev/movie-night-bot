@@ -2,7 +2,7 @@ import { COMMANDS_NAMES, COMMAND_OPTION_TYPES } from "../../../constants.js"
 
 export const DELETE_SUGGESTION_COMMAND = {
   name: COMMANDS_NAMES.DELETE_SUGGESTION,
-  description: 'Remove suggestion from the list',
+  description: 'Remove movie from the list',
   type: COMMAND_OPTION_TYPES.SUB_COMMAND,
   options: [
     {

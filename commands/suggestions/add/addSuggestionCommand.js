@@ -2,7 +2,7 @@ import { COMMANDS_NAMES, COMMAND_OPTION_TYPES } from "../../../constants.js";
 
 export const ADD_SUGGESTION_COMMAND = {
   name: COMMANDS_NAMES.ADD_SUGGESTION,
-  description: 'Add a suggestion to the list',
+  description: 'Add a movie to the list',
   type: COMMAND_OPTION_TYPES.SUB_COMMAND,
   options: [
     {
