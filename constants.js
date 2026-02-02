@@ -6,7 +6,8 @@ export const COMMANDS_NAMES = {
   EDIT_SUGGESTION: 'suggestion-edit',
   DELETE_SUGGESTION: 'suggestion-delete',
   PREVIEW_POLL: 'poll-preview',
-  CREATE_POLL: 'poll-create'
+  CREATE_POLL: 'poll-create',
+  GET_LIST: 'list-get'
 };
 
 export const COMMAND_OPTION_TYPES = {

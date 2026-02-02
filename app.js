@@ -11,6 +11,7 @@ import { handleEditCommand } from './commands/suggestions/edit/editSuggestionCom
 import { handleDeleteCommand } from './commands/suggestions/delete/deleteSuggestionCommandHandler.js';
 import { handlePreviewCommand } from './commands/polls/preview/previewPollCommandHandler.js';
 import { handleCreatePollCommand } from './commands/polls/create/createPollCommandHandler.js';
+import { handleGetCommand } from './commands/list/get/getListCommandHandler.js';
 import { COMMANDS_NAMES } from './constants.js';
 import fs, { access, constants } from 'fs';
 import { suggestionsFilePath } from './fileUtils.js';
@@ -44,6 +45,8 @@ app.post('/interactions', async function (req, res) {
         return handlePreviewCommand(res, data);
       case COMMANDS_NAMES.CREATE_POLL:
         return handleCreatePollCommand(res, data, channel_id);
+      case COMMANDS_NAMES.GET_LIST:
+        return handleGetCommand(res);
       default:
         console.error(`unknown command: ${name}`);
         return res.status(400).json({ error: 'unknown command' });

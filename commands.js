@@ -4,6 +4,7 @@ import { EDIT_SUGGESTION_COMMAND } from "./commands/suggestions/edit/editSuggest
 import { DELETE_SUGGESTION_COMMAND } from "./commands/suggestions/delete/deleteSuggestionCommand.js";
 import { PREVIEW_POLL_COMMAND } from "./commands/polls/preview/previewPollCommand.js";
 import { CREATE_POLL_COMMAND } from "./commands/polls/create/createPollCommand.js";
+import { GET_LIST_COMMAND } from "./commands/list/get/getListCommand.js";
 import { InstallGlobalCommands } from "./discordUtils.js";
 
 const ALL_COMMANDS = [
@@ -12,7 +13,8 @@ const ALL_COMMANDS = [
   EDIT_SUGGESTION_COMMAND,
   DELETE_SUGGESTION_COMMAND,
   PREVIEW_POLL_COMMAND,
-  CREATE_POLL_COMMAND
+  CREATE_POLL_COMMAND,
+  GET_LIST_COMMAND
 ];
 
 InstallGlobalCommands(ALL_COMMANDS);
