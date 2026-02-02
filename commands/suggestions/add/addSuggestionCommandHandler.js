@@ -2,6 +2,7 @@ import fs from 'fs';
 import { DuplicateError } from '../../../duplicateError.js';
 import { suggestionsFilePath } from '../../../fileUtils.js';
 import { createBasicMessageComponent } from '../../../discordUtils.js';
+import { EOL } from 'os';
 
 export const handleAddCommand = (res, data) => {
   try {
@@ -40,7 +41,7 @@ const parseOptions = (options) => {
 
   let result = {
     optionsValues,
-    toString: () => `\n${optionsValues.title},${optionsValues.watched},${optionsValues.participated},${optionsValues.theme}`
+    toString: () => `${EOL}${optionsValues.title},${optionsValues.watched},${optionsValues.participated},${optionsValues.theme}`
   };
 
   return result;
