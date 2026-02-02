@@ -13,9 +13,9 @@ export const MOVE_SUGGESTION_COMMAND = {
     },
     {
       name: 'to',
-      description: 'New position in the list',
+      description: 'New place in the list',
       type: COMMAND_OPTION_TYPES.STRING,
-      required: true,
+      required: false,
       choices: [
         {
           name: 'front',
@@ -26,6 +26,12 @@ export const MOVE_SUGGESTION_COMMAND = {
           value: 'back'
         }
       ]
+    },
+    {
+      name: 'position',
+      description: 'New position in the list. Higher priority than "to" option',
+      type: COMMAND_OPTION_TYPES.INTEGER,
+      required: false
     }
   ]
 }
