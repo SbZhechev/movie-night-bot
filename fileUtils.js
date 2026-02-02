@@ -24,9 +24,12 @@ export const parseSuggestionsFile = () => {
 }
 
 export const updateSuggestionsFile = (newContentArray) => {
-  const content = newContentArray.join(EOL);
+  const content = newContentArray.map(movie => {
+    return `${movie.title},${movie.watched},${movie.participated},${movie.theme}`;
+  });
 
-  fs.writeFileSync(suggestionsFilePath, content);
+  content.unshift('title,watched,participated,theme');
+  fs.writeFileSync(suggestionsFilePath, content.join(EOL));
 }
 
 export const getMoviesForPoll = ({ size, participated, theme }) => {

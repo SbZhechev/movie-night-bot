@@ -1,13 +1,13 @@
-import { readSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
+import { parseSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { createBasicMessageComponent } from "../../../discordUtils.js";
 
-export const handleDeleteComman = (res, data) => {
+export const handleDeleteCommand = (res, data) => {
   try {
     let movieTitle = data.options[0].value;
-    let movies = readSuggestionsFile();
+    let movies = parseSuggestionsFile();
 
-    let movieIndex = movies.findIndex(movie => movie.includes(movieTitle));
+    let movieIndex = movies.findIndex(movie => movie.title.toLowerCase() === movieTitle.toLowerCase());
 
     if (movieIndex < 0) throw new NotFoundError(`${movieTitle} is not in the list!`);
 
