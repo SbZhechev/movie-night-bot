@@ -7,7 +7,8 @@ export const COMMANDS_NAMES = {
   DELETE_SUGGESTION: 'suggestion-delete',
   PREVIEW_POLL: 'poll-preview',
   CREATE_POLL: 'poll-create',
-  GET_LIST: 'list-get'
+  GET_LIST: 'list-get',
+  SET_LIST: 'list-set'
 };
 
 export const COMMAND_OPTION_TYPES = {
@@ -15,5 +16,6 @@ export const COMMAND_OPTION_TYPES = {
   SUB_COMMAND_GROUP: 2,
   STRING: 3,
   INTEGER: 4,
-  BOOLEAN: 5
+  BOOLEAN: 5,
+  ATTACHMENT: 11
 }

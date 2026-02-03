@@ -32,6 +32,10 @@ export const updateSuggestionsFile = (newContentArray) => {
   fs.writeFileSync(suggestionsFilePath, content.join(EOL));
 }
 
+export const replaceSuggestionsFileContent = (newContent) => {
+  fs.writeFileSync(suggestionsFilePath, newContent, { flag: 'w' });
+}
+
 export const getMoviesForPoll = ({ size, participated, theme }) => {
   let movies = parseSuggestionsFile();
 

@@ -5,6 +5,7 @@ import { DELETE_SUGGESTION_COMMAND } from "./commands/suggestions/delete/deleteS
 import { PREVIEW_POLL_COMMAND } from "./commands/polls/preview/previewPollCommand.js";
 import { CREATE_POLL_COMMAND } from "./commands/polls/create/createPollCommand.js";
 import { GET_LIST_COMMAND } from "./commands/list/get/getListCommand.js";
+import { SET_LIST_COMMAND } from "./commands/list/set/setListCommand.js";
 import { InstallGlobalCommands } from "./discordUtils.js";
 
 const ALL_COMMANDS = [
@@ -14,7 +15,8 @@ const ALL_COMMANDS = [
   DELETE_SUGGESTION_COMMAND,
   PREVIEW_POLL_COMMAND,
   CREATE_POLL_COMMAND,
-  GET_LIST_COMMAND
+  GET_LIST_COMMAND,
+  SET_LIST_COMMAND
 ];
 
 InstallGlobalCommands(ALL_COMMANDS);
