@@ -1,12 +1,13 @@
 import { createBasicMessageComponent } from "../../../discordUtils.js";
-import { getMoviesForPoll } from "../../../fileUtils.js";
+import { getMoviesForPoll, parseSuggestionsFile } from "../../../fileUtils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { InteractionResponseFlags, InteractionResponseType, MessageComponentTypes } from "discord-interactions";
 
 export const handlePreviewCommand = (res, data) => {
   try {
     const { size, theme, participated } = parseOptions(data.options);
-    let pollCandidates = getMoviesForPoll({ size, participated, theme });
+    const movies = parseSuggestionsFile();
+    let pollCandidates = getMoviesForPoll({ movies, size, participated, theme });
 
     let moviesList = '';
     pollCandidates.forEach(movie => moviesList += `- ${movie.title}\n`);

@@ -36,10 +36,8 @@ export const replaceSuggestionsFileContent = (newContent) => {
   fs.writeFileSync(suggestionsFilePath, newContent, { flag: 'w' });
 }
 
-export const getMoviesForPoll = ({ size, participated, theme }) => {
-  let movies = parseSuggestionsFile();
-
-  movies = movies.filter(movie => {
+export const getMoviesForPoll = ({ movies, size, participated, theme }) => {
+  let pollOptions = movies.filter(movie => {
     const notWatched = movie.watched === 'false';
     const participationMatches = participated ? true : movie.participated === 'false';
     const themeMatches = theme ?
@@ -53,5 +51,5 @@ export const getMoviesForPoll = ({ size, participated, theme }) => {
     throw new NotFoundError('No movie meets the requirements! You can try setting participated option to true or use different theme.');
   }
 
-  return movies.slice(0, size);
+  return pollOptions.slice(0, size);
 }

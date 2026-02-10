@@ -54,6 +54,19 @@ export function createBasicMessageComponent(message) {
   }
 }
 
+export async function createMessage(channelId, messageComponents) {
+  const endpoint = `channels/${channelId}/messages`;
+  const options = {
+    method: 'POST',
+    body: {
+      flags: InteractionResponseFlags.IS_COMPONENTS_V2,
+      components: messageComponents
+    }
+  };
+
+  return DiscordRequest(endpoint, options);
+}
+
 export async function createPollMessage(channelId, poll) {
   const endpoint = `channels/${channelId}/messages`;
   const options = {
@@ -64,5 +77,12 @@ export async function createPollMessage(channelId, poll) {
     }
   }
 
-  await DiscordRequest(endpoint, options);
+  return DiscordRequest(endpoint, options);
+}
+
+export async function getPollMessage(channelId, messageId) {
+  const endpoint = `channels/${channelId}/messages/${messageId}`;
+  const options = { method: 'GET' };
+
+  return DiscordRequest(endpoint, options);
 }
