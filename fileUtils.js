@@ -36,10 +36,9 @@ export const replaceSuggestionsFileContent = (newContent) => {
   fs.writeFileSync(suggestionsFilePath, newContent, { flag: 'w' });
 }
 
-export const getMoviesForPoll = ({ movies, size, participated, theme }) => {
+export const getMoviesForPoll = ({ movies, size, theme }) => {
   let pollOptions = movies.filter(movie => {
     const notWatched = movie.watched === 'false';
-    const participationMatches = participated ? true : movie.participated === 'false';
     const themeMatches = theme ?
       movie.theme.toLowerCase() === theme.toLowerCase() :
       movie.theme.toLowerCase() !== 'christmas';
