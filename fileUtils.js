@@ -43,7 +43,7 @@ export const getMoviesForPoll = ({ movies, size, theme }) => {
       movie.theme.toLowerCase() === theme.toLowerCase() :
       movie.theme.toLowerCase() !== 'christmas';
 
-    return notWatched && participationMatches && themeMatches;
+    return notWatched && themeMatches;
   });
 
   if (movies.length === 0) {
