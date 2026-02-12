@@ -86,3 +86,10 @@ export async function getPollMessage(channelId, messageId) {
 
   return DiscordRequest(endpoint, options);
 }
+
+export async function endPoll(channelId, messageId) {
+  const endpoint = `channels/${channelId}/polls/${messageId}/expire`;
+  const options = { method: 'POST' };
+
+  return DiscordRequest(endpoint, options);
+}
