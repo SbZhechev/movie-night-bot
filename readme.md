@@ -38,15 +38,15 @@
   - file - file that should replace the current list file
  
 - poll logic
- - first N movies from the list get picked
- - watched movies are filtered out
- - by default christmas movies are filtered out (unless theme: "Christmas" is specified in the options)
- - movies that get > 10% of votes stay in the same place
- - movies that get < 10% of votes get moved to the end of the list
- - winner gets marked as watched and moved to the end of the list
- - if there is a tie, another tie breaker poll is created
- - people have multiple votes
- - poll duration is 72 hours
+  - first N movies from the list get picked
+  - watched movies are filtered out
+  - by default christmas movies are filtered out (unless theme: "Christmas" is specified in the options)
+  - movies that get > 10% of votes stay in the same place
+  - movies that get < 10% of votes get moved to the end of the list
+  - winner gets marked as watched and moved to the end of the list
+  - if there is a tie, another tie breaker poll is created
+  - people have multiple votes
+  - poll duration is 72 hours
 
 - tie breaker poll logic
   - all movies that tied in previous poll get added
