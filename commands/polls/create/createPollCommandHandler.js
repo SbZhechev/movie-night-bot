@@ -29,16 +29,18 @@ export const handleCreatePollCommand = async (res, data, channelId) => {
     const messageId = messageData.id;
 
     handlePollResults(channelId, messageId, duration, title);
-    return res.send(createBasicMessageComponent('You got it boss!'));
+    return res.send(createBasicMessageComponent('You got it boss!', true));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while creating a poll!';
+    let isEphemeral = false;
     if (error instanceof NotFoundError) {
       errorMessage = error.message;
+      isEphemeral = true;
     } else {
       console.error(error.message);
     }
 
-    return res.send(createBasicMessageComponent(errorMessage));
+    return res.send(createBasicMessageComponent(errorMessage, isEphemeral));
   }
 }
 

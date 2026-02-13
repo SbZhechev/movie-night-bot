@@ -23,16 +23,18 @@ export const handleEditCommand = (res, data) => {
     updateSuggestionsFile(movies);
 
     console.log(`${title} has been edited!`);
-    return res.send(createBasicMessageComponent(`${title} has been edited!`));
+    return res.send(createBasicMessageComponent(`${title} has been edited!`, true));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while editing a movie!';
+    let isEphemeral = false;
     if (error instanceof NotFoundError || error instanceof RangeError) {
       errorMessage = error.message;
+      isEphemeral = true;
     } else {
       console.error(error);
     }
 
-    return res.send(createBasicMessageComponent(errorMessage));
+    return res.send(createBasicMessageComponent(errorMessage, isEphemeral));
   }
 }
 

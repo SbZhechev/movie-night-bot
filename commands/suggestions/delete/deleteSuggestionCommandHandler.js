@@ -15,13 +15,17 @@ export const handleDeleteCommand = (res, data) => {
     updateSuggestionsFile(movies);
 
     console.log(`${movieTitle} removed from the list!`)
-    return res.send(createBasicMessageComponent(`${movieTitle} removed from the list!`));
+    return res.send(createBasicMessageComponent(`${movieTitle} removed from the list!`, true));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while removing a movie from the list!';
+    let isEphemeral = false;
     if (error instanceof NotFoundError) {
       errorMessage = error.message;
+      isEphemeral = true;
+    } else {
+      console.error(error);
     }
 
-    res.send(createBasicMessageComponent(errorMessage));
+    res.send(createBasicMessageComponent(errorMessage, isEphemeral));
   }
 }

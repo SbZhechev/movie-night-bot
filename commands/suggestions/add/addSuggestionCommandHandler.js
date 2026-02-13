@@ -23,13 +23,15 @@ export const handleAddCommand = (res, data) => {
     return res.send(createBasicMessageComponent(`${title} added to the list!`));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while adding a suggestion!';
+    let isEphemeral = false;
     if (error instanceof DuplicateError) {
       errorMessage = error.message
+      isEphemeral = true;
     } else {
       console.error(error);
     }
 
-    return res.send(createBasicMessageComponent(errorMessage));
+    return res.send(createBasicMessageComponent(errorMessage, isEphemeral));
   }
 }
 

@@ -36,17 +36,18 @@ export const handleMoveCommand = (res, data) => {
     updateSuggestionsFile(movies);
 
     console.log(successMessage);
-    return res.send(createBasicMessageComponent(successMessage));
+    return res.send(createBasicMessageComponent(successMessage, true));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while moving a suggestion!';
-
+    let isEphemeral = false;
     if (error instanceof NotFoundError || error instanceof RangeError) {
       errorMessage = error.message;
+      isEphemeral = true;
     } else {
       console.error(error);
     }
 
-    return res.send(createBasicMessageComponent(errorMessage));
+    return res.send(createBasicMessageComponent(errorMessage, isEphemeral));
   }
 }
 

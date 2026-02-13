@@ -39,11 +39,11 @@ export async function InstallGlobalCommands(commands) {
   }
 }
 
-export function createBasicMessageComponent(message) {
+export function createBasicMessageComponent(message, isEphemeral) {
   return {
     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
-      flags: InteractionResponseFlags.IS_COMPONENTS_V2,
+      flags: InteractionResponseFlags.IS_COMPONENTS_V2 | isEphemeral ? InteractionResponseFlags.EPHEMERAL : 0,
       components: [
         {
           type: MessageComponentTypes.TEXT_DISPLAY,
