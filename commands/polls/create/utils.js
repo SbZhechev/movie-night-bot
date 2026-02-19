@@ -1,6 +1,7 @@
 import { DEFAULT_TIE_BREAKER_POLL_DURATION } from "../../../constants.js";
 import { getPollMessage, createMessage, createPollMessage } from "../../../discordUtils.js";
 import { parseSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
+import { MessageComponentTypes } from "discord-interactions";
 
 export const handlePollResults = (channelId, messageId, duration, isTiebreaker = false, previousPollTitle) => {
   const durationInMiliseconds = duration * 60 * 60 * 1000 + 1000;
