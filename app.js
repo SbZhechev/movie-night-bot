@@ -63,6 +63,7 @@ app.post('/interactions', async function (req, res) {
 access(suggestionsFilePath, constants.F_OK, (err) => {
   // if file doesn't exist, create it
   if (err) {
+    console.log('Suggestions file was created!');
     fs.writeFileSync(suggestionsFilePath, 'title,watched,participated,theme', { flag: 'w' });
   }
 });

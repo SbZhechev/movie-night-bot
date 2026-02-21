@@ -28,6 +28,7 @@ export const handleGetCommand = (res) => {
       filename: 'suggestions.csv'
     });
 
+    console.log('List was requested!');
     res.set(form.getHeaders());
     return form.pipe(res);
   } catch (error) {

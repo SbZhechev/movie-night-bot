@@ -29,6 +29,7 @@ export const handleCreatePollCommand = async (res, data, channelId) => {
     const messageId = messageData.id;
 
     handlePollResults(channelId, messageId, duration, title);
+    console.log('Poll was created!')
     return res.send(createBasicMessageComponent('You got it boss!', true));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while creating a poll!';

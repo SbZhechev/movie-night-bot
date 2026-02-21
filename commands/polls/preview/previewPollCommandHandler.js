@@ -12,6 +12,7 @@ export const handlePreviewCommand = (res, data) => {
     let moviesList = '';
     pollCandidates.forEach(movie => moviesList += `- ${movie.title}\n`);
 
+    console.log('Poll preview was created!');
     return res.send(
       {
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,

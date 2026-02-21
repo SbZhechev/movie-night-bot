@@ -12,6 +12,7 @@ export const handleSetCommand = async (res, data) => {
     let fileData = await response.text();
     replaceSuggestionsFileContent(fileData.trim());
 
+    console.log('List was updated!');
     return res.send(createBasicMessageComponent('List updated!', true));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while setting the list!';
