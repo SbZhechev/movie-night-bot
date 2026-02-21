@@ -38,7 +38,7 @@ export const replaceSuggestionsFileContent = (newContent) => {
 
 export const getMoviesForPoll = ({ movies, size, theme }) => {
   let pollOptions = movies.filter(movie => {
-    const notWatched = movie.watched === 'false';
+    const notWatched = movie.watched.toLowerCase() === 'false';
     const themeMatches = theme ?
       movie.theme.toLowerCase() === theme.toLowerCase() :
       movie.theme.toLowerCase() !== 'christmas';
