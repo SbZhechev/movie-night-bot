@@ -28,7 +28,7 @@ export const handleCreatePollCommand = async (res, data, channelId) => {
     const messageData = await messageResponse.json();
     const messageId = messageData.id;
 
-    handlePollResults(channelId, messageId, duration, title);
+    handlePollResults(channelId, messageId, duration, false, title);
     console.log('Poll was created!')
     return res.send(createBasicMessageComponent('You got it boss!', true));
   } catch (error) {
