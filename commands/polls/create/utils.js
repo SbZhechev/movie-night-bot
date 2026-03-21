@@ -51,7 +51,11 @@ export const handlePollResults = (channelId, messageId, duration, isTiebreaker =
         }
 
         const movie = movies.find(movie => movie.title === result.poll_media.text);
-        movie.participated = true;
+        if (movie) {
+          movie.participated = true;
+        } else {
+          console.warn(`Movie data for result: ${result.poll_media.text} not found!`)
+        }
       });
 
       skippedMovies.forEach(skippedMovieTitle => {
