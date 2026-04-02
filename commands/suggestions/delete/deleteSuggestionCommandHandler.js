@@ -1,18 +1,38 @@
-import { parseSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { createBasicMessageComponent } from "../../../discordUtils.js";
+import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
 
-export const handleDeleteCommand = (res, data) => {
+export const handleDeleteCommand = async (res, data) => {
   try {
     let movieTitle = data.options[0].value;
-    let movies = parseSuggestionsFile();
+    const sheetsClient = await sheetsAPI();
 
-    let movieIndex = movies.findIndex(movie => movie.title.toLowerCase() === movieTitle.toLowerCase());
+    const response = await sheetsClient.spreadsheets.values.get({
+      spreadsheetId: SPREAD_SHEET_ID,
+      range: 'Movie List'
+    });
+
+    const movies = response.data.values;
+
+    let movieIndex = movies.findIndex(movieData => movieData[0].toLowerCase() === movieTitle.toLowerCase());
 
     if (movieIndex < 0) throw new NotFoundError(`${movieTitle} is not in the list!`);
 
     movies.splice(movieIndex, 1);
-    updateSuggestionsFile(movies);
+
+    // clear last remaining row not covered by the new range
+    const emptyRow = ['', '', '', ''];
+    movies.push(emptyRow);
+
+    await sheetsClient.spreadsheets.values.update({
+      spreadsheetId: SPREAD_SHEET_ID,
+      range: 'Movie List',
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        majorDimension: 'ROWS',
+        values: movies,
+      }
+    });
 
     console.log(`${movieTitle} removed from the list!`)
     return res.send(createBasicMessageComponent(`${movieTitle} removed from the list!`, true));
