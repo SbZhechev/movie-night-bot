@@ -11,10 +11,12 @@
   "author": "stambeto",
   "license": "ISC",
   "dependencies": {
+    "@googleapis/sheets": "^13.0.1",
     "discord-interactions": "^4.4.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "form-data": "^4.0.5",
+    "google-auth-library": "^10.6.2",
     "node-fetch": "^3.3.2"
   }
 }

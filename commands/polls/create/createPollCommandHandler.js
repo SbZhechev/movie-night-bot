@@ -1,19 +1,28 @@
 import { createBasicMessageComponent, createPollMessage } from "../../../discordUtils.js"
 import { NotFoundError } from "../../../notFoundError.js";
-import { getMoviesForPoll, parseSuggestionsFile } from "../../../fileUtils.js";
+import { getMoviesForPoll } from "../../../fileUtils.js";
 import { handlePollResults } from "./utils.js";
 import { DEFAULT_POLL_DURATION } from "../../../constants.js";
+import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
+import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
 
 export const handleCreatePollCommand = async (res, data, channelId) => {
   try {
     const { title, size, participated, theme, duration } = parseOptions(data.options);
-    let movies = parseSuggestionsFile();
+    const sheetsClient = await sheetsAPI();
+
+    const response = await sheetsClient.spreadsheets.values.get({
+      spreadsheetId: SPREAD_SHEET_ID,
+      range: 'Movie List'
+    });
+
+    const movies = response.data.values;
     let pollOptions = getMoviesForPoll({ movies, size, participated, theme });
 
     let answers = pollOptions.map((option, index) => {
       return {
         answer_id: index,
-        poll_media: { text: option.title }
+        poll_media: { text: option[MOVIE_PROPERTIES_MAP.TITLE] }
       }
     })
 

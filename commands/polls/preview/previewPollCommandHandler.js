@@ -1,16 +1,25 @@
 import { createBasicMessageComponent } from "../../../discordUtils.js";
-import { getMoviesForPoll, parseSuggestionsFile } from "../../../fileUtils.js";
+import { getMoviesForPoll } from "../../../fileUtils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { InteractionResponseFlags, InteractionResponseType, MessageComponentTypes } from "discord-interactions";
+import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
+import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
 
-export const handlePreviewCommand = (res, data) => {
+export const handlePreviewCommand = async (res, data) => {
   try {
     const { size, theme, participated } = parseOptions(data.options);
-    const movies = parseSuggestionsFile();
+    const sheetsClient = await sheetsAPI();
+
+    const response = await sheetsClient.spreadsheets.values.get({
+      spreadsheetId: SPREAD_SHEET_ID,
+      range: 'Movie List'
+    });
+
+    const movies = response.data.values;
     let pollCandidates = getMoviesForPoll({ movies, size, participated, theme });
 
     let moviesList = '';
-    pollCandidates.forEach(movie => moviesList += `- ${movie.title}\n`);
+    pollCandidates.forEach(movieData => moviesList += `- ${movieData[MOVIE_PROPERTIES_MAP.TITLE]}\n`);
 
     console.log('Poll preview was created!');
     return res.send(
