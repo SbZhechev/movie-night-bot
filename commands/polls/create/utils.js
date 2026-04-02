@@ -1,10 +1,11 @@
-import { DEFAULT_TIE_BREAKER_POLL_DURATION } from "../../../constants.js";
+import { DEFAULT_TIE_BREAKER_POLL_DURATION, MOVIE_PROPERTIES_MAP } from "../../../constants.js";
 import { getPollMessage, createMessage, createPollMessage } from "../../../discordUtils.js";
-import { parseSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
 import { MessageComponentTypes } from "discord-interactions";
+import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
 
 export const handlePollResults = (channelId, messageId, duration, isTiebreaker = false, previousPollTitle) => {
   const durationInMiliseconds = duration * 60 * 60 * 1000 + 1000;
+
   setTimeout(async () => {
     const getPollResponse = await getPollMessage(channelId, messageId);
     const messageData = await getPollResponse.json();
@@ -16,7 +17,15 @@ export const handlePollResults = (channelId, messageId, duration, isTiebreaker =
       option.count = result ? result.count : 0;
       return option;
     });
-    const movies = parseSuggestionsFile();
+
+    const sheetsClient = await sheetsAPI();
+
+    const response = await sheetsClient.spreadsheets.values.get({
+      spreadsheetId: SPREAD_SHEET_ID,
+      range: 'Movie List'
+    });
+
+    const movies = response.data.values;
 
     const totalVotes = extendedResults.reduce((sum, result) => sum += result.count, 0);
     if (totalVotes === 0) {
@@ -50,16 +59,16 @@ export const handlePollResults = (channelId, messageId, duration, isTiebreaker =
           skippedMovies.push(result.poll_media.text);
         }
 
-        const movie = movies.find(movie => movie.title === result.poll_media.text);
+        const movie = movies.find(movieData => movieData[MOVIE_PROPERTIES_MAP.TITLE] === result.poll_media.text);
         if (movie) {
-          movie.participated = true;
+          movie[MOVIE_PROPERTIES_MAP.PARTICIPATED] = true;
         } else {
           console.warn(`Movie data for result: ${result.poll_media.text} not found!`)
         }
       });
 
       skippedMovies.forEach(skippedMovieTitle => {
-        const skippedMovieIndex = movies.findIndex(movie => movie.title === skippedMovieTitle);
+        const skippedMovieIndex = movies.findIndex(movieData => movieData[MOVIE_PROPERTIES_MAP.TITLE] === skippedMovieTitle);
         const skippedMovie = movies.splice(skippedMovieIndex, 1)[0];
         movies.push(skippedMovie);
       });
@@ -67,9 +76,9 @@ export const handlePollResults = (channelId, messageId, duration, isTiebreaker =
 
     if (winners.length === 1) {
       let winner = winners[0];
-      const winnerIndex = movies.findIndex(movie => movie.title === winner.poll_media.text);
+      const winnerIndex = movies.findIndex(movieData => movieData[MOVIE_PROPERTIES_MAP.TITLE] === winner.poll_media.text);
       const winnerMovie = movies.splice(winnerIndex, 1)[0];
-      winnerMovie.watched = true;
+      winnerMovie[MOVIE_PROPERTIES_MAP.WATCHED] = true;
       movies.push(winnerMovie);
 
       await createResultsMessage(channelId, winner, skippedMovies);
@@ -97,7 +106,15 @@ export const handlePollResults = (channelId, messageId, duration, isTiebreaker =
       handlePollResults(channelId, newPollMessageId, pollObject.duration, true);
     }
 
-    updateSuggestionsFile(movies);
+    await sheetsClient.spreadsheets.values.update({
+      spreadsheetId: SPREAD_SHEET_ID,
+      range: 'Movie List',
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        majorDimension: 'ROWS',
+        values: movies,
+      }
+    });
   }, durationInMiliseconds);
 
   console.log('Timeout for poll results created!');
@@ -129,7 +146,7 @@ const createResultsMessage = (channelId, winner, skippedMovies) => {
         },
         {
           type: MessageComponentTypes.TEXT_DISPLAY,
-          content: '### Movies that didn\'t make the cut due to low/no votes:'
+          content: '### Movies that will be moved to the end of the list due to low/no votes:'
         },
         {
           type: MessageComponentTypes.TEXT_DISPLAY,
