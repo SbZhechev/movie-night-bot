@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { EOL } from 'os';
 import { NotFoundError } from './notFoundError.js';
+import { MOVIE_PROPERTIES_MAP } from './constants.js';
 
 export const suggestionsFilePath = path.join(path.resolve(), 'suggestions.csv');
 
@@ -37,11 +38,11 @@ export const replaceSuggestionsFileContent = (newContent) => {
 }
 
 export const getMoviesForPoll = ({ movies, size, theme }) => {
-  let pollOptions = movies.filter(movie => {
-    const notWatched = movie.watched.toLowerCase() === 'false';
+  let pollOptions = movies.filter(movieData => {
+    const notWatched = movieData[MOVIE_PROPERTIES_MAP.WATCHED].toLowerCase() === 'false';
     const themeMatches = theme ?
-      movie.theme.toLowerCase() === theme.toLowerCase() :
-      movie.theme.toLowerCase() !== 'christmas';
+      movieData[MOVIE_PROPERTIES_MAP.THEME].toLowerCase() === theme.toLowerCase() :
+      movieData[MOVIE_PROPERTIES_MAP.THEME].toLowerCase() !== 'christmas';
 
     return notWatched && themeMatches;
   });
