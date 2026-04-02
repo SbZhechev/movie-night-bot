@@ -1,6 +1,7 @@
 import { NotFoundError } from "../../../notFoundError.js";
 import { createBasicMessageComponent } from "../../../discordUtils.js";
 import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
+import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
 
 export const handleDeleteCommand = async (res, data) => {
   try {
@@ -14,7 +15,7 @@ export const handleDeleteCommand = async (res, data) => {
 
     const movies = response.data.values;
 
-    let movieIndex = movies.findIndex(movieData => movieData[0].toLowerCase() === movieTitle.toLowerCase());
+    let movieIndex = movies.findIndex(movieData => movieData[MOVIE_PROPERTIES_MAP.TITLE].toLowerCase() === movieTitle.toLowerCase());
 
     if (movieIndex < 0) throw new NotFoundError(`${movieTitle} is not in the list!`);
 

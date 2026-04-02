@@ -22,3 +22,10 @@ export const COMMAND_OPTION_TYPES = {
 
 export const DEFAULT_POLL_DURATION = 72;
 export const DEFAULT_TIE_BREAKER_POLL_DURATION = 24;
+
+export const MOVIE_PROPERTIES_MAP = {
+  TITLE: '0',
+  WATCHED: '1',
+  PARTICIPATED: '2',
+  THEME: '3'
+};

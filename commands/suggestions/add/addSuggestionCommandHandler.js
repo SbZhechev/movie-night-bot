@@ -1,6 +1,7 @@
 import { DuplicateError } from '../../../duplicateError.js';
 import { createBasicMessageComponent } from '../../../discordUtils.js';
 import { sheetsAPI, SPREAD_SHEET_ID } from '../../../google-sheets/index.js';
+import { MOVIE_PROPERTIES_MAP } from '../../../constants.js';
 
 export const handleAddCommand = async (res, data) => {
   try {
@@ -15,7 +16,7 @@ export const handleAddCommand = async (res, data) => {
 
     const movies = response.data.values;
 
-    if (movies.some(movieData => movieData[0].toLowerCase() === title.toLowerCase())) {
+    if (movies.some(movieData => movieData[MOVIE_PROPERTIES_MAP.TITLE].toLowerCase() === title.toLowerCase())) {
       throw new DuplicateError(`${title} is already in the list!`);
     }
 
