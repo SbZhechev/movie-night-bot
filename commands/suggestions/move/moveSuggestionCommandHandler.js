@@ -1,8 +1,8 @@
-import { parseSuggestionsFile, updateSuggestionsFile } from "../../../fileUtils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { createBasicMessageComponent } from "../../../discordUtils.js";
+import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
 
-export const handleMoveCommand = (res, data) => {
+export const handleMoveCommand = async (res, data) => {
   try {
     const { title: movieTitle, to: newPlace, position: newPosition } = parseOptions(data.options);
 
@@ -10,33 +10,51 @@ export const handleMoveCommand = (res, data) => {
       throw new RangeError('You have to provide at least one of the options "to" or "position"!');
     }
 
-    const movies = parseSuggestionsFile();
-    const movieIndex = movies.findIndex(movie => movie.title.toLowerCase() === movieTitle.toLowerCase());
+    const sheetsClient = await sheetsAPI();
+
+    const response = await sheetsClient.spreadsheets.values.get({
+      spreadsheetId: SPREAD_SHEET_ID,
+      range: 'Movie List'
+    });
+
+    const movies = response.data.values;
+
+    const movieIndex = movies.findIndex(movieData => movieData[0].toLowerCase() === movieTitle.toLowerCase());
 
     if (movieIndex < 0) throw new NotFoundError(`${movieTitle} is not in the list!`);
 
-    const movieData = movies.splice(movieIndex, 1)[0];
+    const movieToMove = movies.splice(movieIndex, 1)[0];
 
     let successMessage = `${movieTitle} moved to the ${newPlace} of the list!`;
     if (newPosition) {
-      movies.splice(newPosition - 1, 0, movieData);
+      movies.splice(newPosition, 0, movieToMove);
       successMessage = `${movieTitle} moved to position ${newPosition} in the list!`
     } else {
       switch (newPlace) {
         case 'front':
-          movies.splice(0, 0, movieData);
+          movies.splice(1, 0, movieToMove);
           break;
         case 'back':
-          movies.push(movieData);
+          movies.push(movieToMove);
           break;
         default:
           throw new TypeError('Invalid position provided!');
       }
     }
-    updateSuggestionsFile(movies);
+
+    await sheetsClient.spreadsheets.values.update({
+      spreadsheetId: SPREAD_SHEET_ID,
+      range: 'Movie List',
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        majorDimension: 'ROWS',
+        values: movies,
+      }
+    });
 
     console.log(successMessage);
-    return res.send(createBasicMessageComponent(successMessage, true));
+    const isEphemeral = true;
+    return res.send(createBasicMessageComponent(successMessage, isEphemeral));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while moving a suggestion!';
     let isEphemeral = false;
