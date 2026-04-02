@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 
 let sheetsClient = null;
-const spreadsheetId = process.env.SPREAD_SHEET_ID;
+export const SPREAD_SHEET_ID = process.env.SPREAD_SHEET_ID;
 
 async function init() {
   generateCredentialsFile();

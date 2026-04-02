@@ -1,24 +1,50 @@
 import { DuplicateError } from '../../../duplicateError.js';
-import { parseSuggestionsFile, updateSuggestionsFile } from '../../../fileUtils.js';
 import { createBasicMessageComponent } from '../../../discordUtils.js';
+import { sheetsAPI, SPREAD_SHEET_ID } from '../../../google-sheets/index.js';
 
-export const handleAddCommand = (res, data) => {
+export const handleAddCommand = async (res, data) => {
   try {
     let { title, watched, participated, theme, position } = parseOptions(data.options);
 
-    let movies = parseSuggestionsFile();
-    if (movies.some(movie => movie.title.toLowerCase() === title.toLowerCase())) {
+    const sheetsClient = await sheetsAPI();
+
+    const response = await sheetsClient.spreadsheets.values.get({
+      spreadsheetId: SPREAD_SHEET_ID,
+      range: 'Movie List'
+    });
+
+    const movies = response.data.values;
+
+    if (movies.some(movieData => movieData[0].toLowerCase() === title.toLowerCase())) {
       throw new DuplicateError(`${title} is already in the list!`);
     }
 
-    let newSuggestion = { title, watched, participated, theme };
+    const newSuggestion = [title, watched, participated, theme];
+
     if (!position) {
-      movies.push(newSuggestion);
+      await sheetsClient.spreadsheets.values.append({
+        spreadsheetId: SPREAD_SHEET_ID,
+        range: 'Movie List',
+        valueInputOption: 'USER_ENTERED',
+        insertDataOption: 'INSERT_ROWS',
+        requestBody: {
+          values: [newSuggestion],
+        }
+      });
     } else {
-      movies.splice(position - 1, 0, newSuggestion);
+      movies.splice(position, 0, newSuggestion);
+
+      await sheetsClient.spreadsheets.values.update({
+        spreadsheetId: SPREAD_SHEET_ID,
+        range: 'Movie List',
+        valueInputOption: 'USER_ENTERED',
+        requestBody: {
+          majorDimension: 'ROWS',
+          values: movies,
+        }
+      });
     }
 
-    updateSuggestionsFile(movies);
     console.log(`${title} added to the list!`);
     return res.send(createBasicMessageComponent(`${title} added to the list!`));
   } catch (error) {
