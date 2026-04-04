@@ -2,6 +2,7 @@ import { createCronJob } from "../cron/cronJob.js";
 import { editMessage, createBasicMessageComponent, createPollMessage } from "../discordUtils.js";
 import { handlePollResults } from "./polls/create/utils.js";
 import { MessageComponentTypes, ButtonStyleTypes } from "discord-interactions";
+import { MOVIE_PROPERTIES_MAP } from "../constants.js";
 
 export const handleCreatePoll = async (channelId, pollObject, member) => {
   const messageResponse = await createPollMessage(channelId, pollObject);

@@ -5,8 +5,9 @@ import { Receiver } from '@upstash/qstash';
 export const verifyDiscordRequest = (req) => {
   const signature = req.headers["x-signature-ed25519"];
   const timestamp = req.headers["x-signature-timestamp"];
+  const rawBody = req.body.toString('utf-8');
 
-  return verifyKey(req.rawBody, signature, timestamp, process.env.DISCORD_PUBLIC_KEY);
+  return verifyKey(rawBody, signature, timestamp, process.env.DISCORD_PUBLIC_KEY);
 }
 
 export const verifyCrobJobRequest = async (req) => {

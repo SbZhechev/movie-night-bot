@@ -18,19 +18,14 @@ import { handleUpdateList } from './commands/utils.js';
 const app = express();
 const port = 3000;
 
-app.use(
-  express.json({
-    verify: (req, res, buf) => {
-      req.rawBody = buf.toString();
-    },
-  })
-);
+app.use(express.raw({ type: 'application/json' }));
 
 app.post('/interactions', async function (req, res) {
   const isValid = verifyDiscordRequest(req);
   if (!isValid) return res.status(401).send("Invalid signature");
 
-  const { type, data, channel_id, member, message } = req.body;
+  const body = JSON.parse(req.body);
+  const { type, data, channel_id, member, message } = body;
 
   // Handle verification requests
   if (type === InteractionType.PING) {
