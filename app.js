@@ -13,11 +13,9 @@ import { handleCreatePollCommand } from './commands/polls/create/createPollComma
 import { handleGetCommand } from './commands/list/get/getListCommandHandler.js';
 import { handleSetCommand } from './commands/list/set/setListCommandHandler.js';
 import { COMMANDS_NAMES } from './constants.js';
-import fs, { access, constants } from 'fs';
-import { suggestionsFilePath } from './fileUtils.js';
 import { createPollEndedMessage } from './discordUtils.js';
 import { verifyCrobJobRequest, verifyDiscordRequest } from './verifyUtils.js';
-import { handleUpdateList } from './commands/list/update/updateListHandler.js';
+import { handleUpdateList } from './commands/utils.js';
 
 const app = express();
 const port = 3000;
@@ -83,14 +81,6 @@ app.post('/pollEnded', async (req, res) => {
   await createPollEndedMessage(channelId, pollMessageId, user);
 
   res.sendStatus(200);
-});
-
-access(suggestionsFilePath, constants.F_OK, (err) => {
-  // if file doesn't exist, create it
-  if (err) {
-    console.log('Suggestions file was created!');
-    fs.writeFileSync(suggestionsFilePath, 'title,watched,participated,theme', { flag: 'w' });
-  }
 });
 
 app.listen(port, () => {
