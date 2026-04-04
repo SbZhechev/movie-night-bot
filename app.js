@@ -77,6 +77,10 @@ app.post('/pollEnded', async (req, res) => {
   res.sendStatus(200);
 });
 
+app.get('/', async (req, res) => {
+  res.sendStatus(200);
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
