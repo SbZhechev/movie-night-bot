@@ -3,7 +3,6 @@ import { editMessage, createBasicMessageComponent, createPollMessage } from "../
 import { handlePollResults } from "./polls/create/utils.js";
 import { MessageComponentTypes, ButtonStyleTypes } from "discord-interactions";
 import { MOVIE_PROPERTIES_MAP } from "../constants.js";
-import { endPoll } from "../discordUtils.js";
 
 export const handleCreatePoll = async (channelId, pollObject, member) => {
   const messageResponse = await createPollMessage(channelId, pollObject);
@@ -11,10 +10,7 @@ export const handleCreatePoll = async (channelId, pollObject, member) => {
   const messageId = messageData.id;
 
   console.log('Poll was created!');
-  createCronJob(messageId, channelId, 10000, member);
-  setTimeout(() => {
-    endPoll(channelId, messageId);
-  }, 10000);
+  createCronJob(messageId, channelId, pollObject.duration, member);
 }
 
 export const handleUpdateList = async (res, message, member) => {
