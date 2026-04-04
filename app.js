@@ -28,9 +28,9 @@ app.post('/interactions', async function (req, res) {
   const { type, data, channel_id, member, message } = body;
 
   // Handle verification requests
-  if (type === InteractionType.PING) {
+  if (type === 1) {
     console.log('Received PING, sending PONG');
-    return res.send({ type: InteractionResponseType.PONG });
+    return res.send({ type: 1 });
   }
 
   // Handle slash command requests
