@@ -3,7 +3,6 @@ import express from 'express';
 import {
   InteractionResponseType,
   InteractionType,
-  verifyKeyMiddleware
 } from 'discord-interactions';
 import { handleAddCommand } from './commands/suggestions/add/addSuggestionCommandHandler.js';
 import { handleMoveCommand } from './commands/suggestions/move/moveSuggestionCommandHandler.js';
@@ -16,14 +15,26 @@ import { handleSetCommand } from './commands/list/set/setListCommandHandler.js';
 import { COMMANDS_NAMES } from './constants.js';
 import fs, { access, constants } from 'fs';
 import { suggestionsFilePath } from './fileUtils.js';
+import { createPollEndedMessage } from './discordUtils.js';
+import { verifyCrobJobRequest, verifyDiscordRequest } from './verifyUtils.js';
+import { handleUpdateList } from './commands/list/update/updateListHandler.js';
 
 const app = express();
 const port = 3000;
 
-app.use(verifyKeyMiddleware(process.env.PUBLIC_KEY));
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf.toString();
+    },
+  })
+);
 
 app.post('/interactions', async function (req, res) {
-  const { id, type, data, channel_id } = req.body;
+  const isValid = verifyDiscordRequest(req);
+  if (!isValid) return res.status(401).send("Invalid signature");
+
+  const { type, data, channel_id, member, message } = req.body;
 
   // Handle verification requests
   if (type === InteractionType.PING) {
@@ -45,7 +56,7 @@ app.post('/interactions', async function (req, res) {
       case COMMANDS_NAMES.PREVIEW_POLL:
         return handlePreviewCommand(res, data);
       case COMMANDS_NAMES.CREATE_POLL:
-        return handleCreatePollCommand(res, data, channel_id);
+        return handleCreatePollCommand(res, data, channel_id, member);
       case COMMANDS_NAMES.GET_LIST:
         return handleGetCommand(res);
       case COMMANDS_NAMES.SET_LIST:
@@ -56,8 +67,22 @@ app.post('/interactions', async function (req, res) {
     }
   }
 
+  if (type === InteractionType.MESSAGE_COMPONENT) {
+    return handleUpdateList(res, message, member);
+  }
+
   console.error('unknown interaction type', type);
   return res.status(400).json({ error: 'unknown interaction type' });
+});
+
+app.post('/pollEnded', async (req, res) => {
+  const isValid = await verifyCrobJobRequest(req);
+  if (!isValid) return res.status(401).json({ error: "Unauthorized" });
+
+  const { channelId, pollMessageId, user } = req.body;
+  await createPollEndedMessage(channelId, pollMessageId, user);
+
+  res.sendStatus(200);
 });
 
 access(suggestionsFilePath, constants.F_OK, (err) => {

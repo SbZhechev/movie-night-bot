@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@googleapis/sheets": "^13.0.1",
+    "@upstash/qstash": "^2.10.1",
     "discord-interactions": "^4.4.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",

@@ -5,6 +5,7 @@ import {
   InteractionResponseFlags,
   InteractionResponseType,
   MessageComponentTypes,
+  ButtonStyleTypes
 } from 'discord-interactions';
 
 export async function DiscordRequest(endpoint, options) {
@@ -85,6 +86,28 @@ export async function createPollMessage(channelId, poll) {
   return DiscordRequest(endpoint, options);
 }
 
+export async function createPollEndedMessage(channelId, pollMessageId, user) {
+  const messageComponents = [
+    {
+      type: MessageComponentTypes.TEXT_DISPLAY,
+      content: `<@${user}> Wagwan my driller? The poll finished!`
+    },
+    {
+      type: MessageComponentTypes.ACTION_ROW,
+      components: [
+        {
+          type: MessageComponentTypes.BUTTON,
+          style: ButtonStyleTypes.PRIMARY,
+          label: 'Update List',
+          custom_id: `${channelId}::${pollMessageId}`
+        }
+      ]
+    }
+  ];
+
+  await createMessage(channelId, messageComponents);
+}
+
 export async function getPollMessage(channelId, messageId) {
   const endpoint = `channels/${channelId}/messages/${messageId}`;
   const options = { method: 'GET' };
@@ -95,6 +118,18 @@ export async function getPollMessage(channelId, messageId) {
 export async function endPoll(channelId, messageId) {
   const endpoint = `channels/${channelId}/polls/${messageId}/expire`;
   const options = { method: 'POST' };
+
+  return DiscordRequest(endpoint, options);
+}
+
+export async function editMessage(channelId, messageId, messageComponents) {
+  const endpoint = `/channels/${channelId}/messages/${messageId}`;
+  const options = {
+    method: 'PATCH',
+    body: {
+      components: messageComponents
+    }
+  };
 
   return DiscordRequest(endpoint, options);
 }

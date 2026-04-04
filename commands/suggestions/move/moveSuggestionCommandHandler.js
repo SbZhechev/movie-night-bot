@@ -1,7 +1,7 @@
 import { NotFoundError } from "../../../notFoundError.js";
 import { createBasicMessageComponent } from "../../../discordUtils.js";
-import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
 import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
+import { getList, updateList } from "../../../google-sheets/utils.js";
 
 export const handleMoveCommand = async (res, data) => {
   try {
@@ -11,14 +11,7 @@ export const handleMoveCommand = async (res, data) => {
       throw new RangeError('You have to provide at least one of the options "to" or "position"!');
     }
 
-    const sheetsClient = await sheetsAPI();
-
-    const response = await sheetsClient.spreadsheets.values.get({
-      spreadsheetId: SPREAD_SHEET_ID,
-      range: 'Movie List'
-    });
-
-    const movies = response.data.values;
+    const movies = await getList();
 
     const movieIndex = movies.findIndex(movieData => movieData[MOVIE_PROPERTIES_MAP.TITLE].toLowerCase() === movieTitle.toLowerCase());
 
@@ -43,15 +36,7 @@ export const handleMoveCommand = async (res, data) => {
       }
     }
 
-    await sheetsClient.spreadsheets.values.update({
-      spreadsheetId: SPREAD_SHEET_ID,
-      range: 'Movie List',
-      valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        majorDimension: 'ROWS',
-        values: movies,
-      }
-    });
+    await updateList(movies);
 
     console.log(successMessage);
     const isEphemeral = true;
