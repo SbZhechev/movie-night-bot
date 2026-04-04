@@ -22,7 +22,7 @@ app.use(express.raw({ type: 'application/json' }));
 
 app.post('/interactions', async function (req, res) {
   console.log('body type:', typeof req.body, Buffer.isBuffer(req.body));
-  const isValid = verifyDiscordRequest(req);
+  const isValid = await verifyDiscordRequest(req);
   console.log('isValid:', isValid);
   if (!isValid) return res.status(401).send("Invalid signature");
 

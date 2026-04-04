@@ -8,8 +8,8 @@ export const verifyDiscordRequest = (req) => {
 
   console.log('signature:', signature);
   console.log('timestamp:', timestamp);
-  console.log('public key:', process.env.DISCORD_PUBLIC_KEY);
-  return verifyKey(req.body, signature, timestamp, process.env.DISCORD_PUBLIC_KEY);
+  console.log('public key:', process.env.PUBLIC_KEY);
+  return verifyKey(req.body, signature, timestamp, process.env.PUBLIC_KEY);
 }
 
 export const verifyCrobJobRequest = async (req) => {
