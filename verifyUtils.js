@@ -17,6 +17,6 @@ export const verifyCrobJobRequest = async (req) => {
 
   return receiver.verify({
     signature: req.headers["upstash-signature"],
-    body: JSON.stringify(req.body),
+    body: req.body.toString('utf-8'),
   });;
 }

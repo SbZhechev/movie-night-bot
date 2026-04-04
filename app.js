@@ -65,8 +65,8 @@ app.post('/interactions', async function (req, res) {
 });
 
 app.post('/pollEnded', async (req, res) => {
-  // const isValid = await verifyCrobJobRequest(req);
-  // if (!isValid) return res.status(401).json({ error: "Unauthorized" });
+  const isValid = await verifyCrobJobRequest(req);
+  if (!isValid) return res.status(401).json({ error: "Unauthorized" });
 
   const body = JSON.parse(req.body.toString('utf-8'));
   const { channelId, pollMessageId, user } = body;
