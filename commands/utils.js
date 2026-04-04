@@ -27,7 +27,6 @@ export const handleUpdateList = async (res, message, member) => {
   let button = message.components[1].components[0];
   const [channelId, pollMessageId] = button.custom_id.split('::');
 
-  res.send(createBasicMessageComponent('Aight, bet!', true));
   await handlePollResults(channelId, pollMessageId, member);
 
   message.components[1].components[0] = {
@@ -39,6 +38,8 @@ export const handleUpdateList = async (res, message, member) => {
   }
 
   await editMessage(channelId, message.id, message.components);
+
+  res.send(createBasicMessageComponent('Aight, bet!', true));
 }
 
 export const getMoviesForPoll = ({ movies, size, theme }) => {

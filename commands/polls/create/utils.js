@@ -5,7 +5,6 @@ import { getList, updateList } from "../../../google-sheets/utils.js";
 import { handleCreatePoll } from "../../utils.js";
 
 export const handlePollResults = async (channelId, messageId, member) => {
-  console.log(channelId, messageId, member);
   const getPollResponse = await getPollMessage(channelId, messageId);
   const messageData = await getPollResponse.json();
 
