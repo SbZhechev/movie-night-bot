@@ -6,9 +6,6 @@ export const verifyDiscordRequest = (req) => {
   const signature = req.headers["x-signature-ed25519"];
   const timestamp = req.headers["x-signature-timestamp"];
 
-  console.log('signature:', signature);
-  console.log('timestamp:', timestamp);
-  console.log('public key:', process.env.PUBLIC_KEY);
   return verifyKey(req.body, signature, timestamp, process.env.PUBLIC_KEY);
 }
 

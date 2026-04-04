@@ -21,9 +21,8 @@ const port = 3000;
 app.use(express.raw({ type: 'application/json' }));
 
 app.post('/interactions', async function (req, res) {
-  console.log('body type:', typeof req.body, Buffer.isBuffer(req.body));
   const isValid = await verifyDiscordRequest(req);
-  console.log('isValid:', isValid);
+
   if (!isValid) return res.status(401).send("Invalid signature");
 
   const body = JSON.parse(req.body.toString('utf-8'));
