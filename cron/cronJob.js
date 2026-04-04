@@ -1,12 +1,6 @@
 import "dotenv/config";
 import { Client } from '@upstash/qstash'
 
-const client = new Client({
-  baseUrl: process.env.QSTASH_URL,
-  token: process.env.QSTASH_TOKEN,
-
-})
-
 export const createCronJob = async (pollMessageId, channelId, pollDuration, member) => {
   console.log(pollMessageId, channelId, pollDuration, member);
   const botBaseUrl = process.env.BASE_URL;
@@ -16,6 +10,11 @@ export const createCronJob = async (pollMessageId, channelId, pollDuration, memb
   const payload = { pollMessageId, channelId, user };
 
   const expirationTimestamp = new Date().getTime() + pollDuration + 1000;
+
+  const client = new Client({
+    baseUrl: process.env.QSTASH_URL,
+    token: process.env.QSTASH_TOKEN,
+  })
 
   await client.publishJSON({
     url: `${botBaseUrl}/pollEnded`,
