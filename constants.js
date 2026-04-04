@@ -7,8 +7,6 @@ export const COMMANDS_NAMES = {
   DELETE_SUGGESTION: 'suggestion-delete',
   PREVIEW_POLL: 'poll-preview',
   CREATE_POLL: 'poll-create',
-  GET_LIST: 'list-get',
-  SET_LIST: 'list-set'
 };
 
 export const COMMAND_OPTION_TYPES = {

@@ -1,8 +1,6 @@
-import { createPollMessage } from "../discordUtils.js";
 import { createCronJob } from "../cron/cronJob.js";
-import { createBasicMessageComponent } from "../../../discordUtils.js";
-import { editMessage } from "../../../discordUtils.js";
-import { handlePollResults } from "../../polls/create/utils.js";
+import { editMessage, createBasicMessageComponent, createPollMessage } from "../discordUtils.js";
+import { handlePollResults } from "./polls/create/utils.js";
 import { MessageComponentTypes, ButtonStyleTypes } from "discord-interactions";
 
 export const handleCreatePoll = async (channelId, pollObject, member) => {
@@ -36,4 +34,21 @@ export const handleUpdateList = async (res, message, member) => {
   }
 
   await editMessage(channelId, message.id, message.components);
+}
+
+export const getMoviesForPoll = ({ movies, size, theme }) => {
+  let pollOptions = movies.filter(movieData => {
+    const notWatched = movieData[MOVIE_PROPERTIES_MAP.WATCHED].toLowerCase() === 'false';
+    const themeMatches = theme ?
+      movieData[MOVIE_PROPERTIES_MAP.THEME].toLowerCase() === theme.toLowerCase() :
+      movieData[MOVIE_PROPERTIES_MAP.THEME].toLowerCase() !== 'christmas';
+
+    return notWatched && themeMatches;
+  });
+
+  if (movies.length === 0) {
+    throw new NotFoundError('No movie meets the requirements! You can try setting participated option to true or use different theme.');
+  }
+
+  return pollOptions.slice(0, size);
 }

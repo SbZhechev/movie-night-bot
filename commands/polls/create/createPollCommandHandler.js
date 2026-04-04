@@ -1,6 +1,6 @@
 import { createBasicMessageComponent, createPollMessage, endPoll } from "../../../discordUtils.js"
 import { NotFoundError } from "../../../notFoundError.js";
-import { getMoviesForPoll } from "../../../fileUtils.js";
+import { getMoviesForPoll } from "../../utils.js";
 import { DEFAULT_POLL_DURATION } from "../../../constants.js";
 import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
 import { getList } from "../../../google-sheets/utils.js";

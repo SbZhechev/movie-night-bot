@@ -1,8 +1,7 @@
 import { createBasicMessageComponent } from "../../../discordUtils.js";
-import { getMoviesForPoll } from "../../../fileUtils.js";
+import { getMoviesForPoll } from "../../utils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { InteractionResponseFlags, InteractionResponseType, MessageComponentTypes } from "discord-interactions";
-import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
 import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
 import { getList } from "../../../google-sheets/utils.js";
 

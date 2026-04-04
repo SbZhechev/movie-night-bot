@@ -10,8 +10,6 @@ import { handleEditCommand } from './commands/suggestions/edit/editSuggestionCom
 import { handleDeleteCommand } from './commands/suggestions/delete/deleteSuggestionCommandHandler.js';
 import { handlePreviewCommand } from './commands/polls/preview/previewPollCommandHandler.js';
 import { handleCreatePollCommand } from './commands/polls/create/createPollCommandHandler.js';
-import { handleGetCommand } from './commands/list/get/getListCommandHandler.js';
-import { handleSetCommand } from './commands/list/set/setListCommandHandler.js';
 import { COMMANDS_NAMES } from './constants.js';
 import { createPollEndedMessage } from './discordUtils.js';
 import { verifyCrobJobRequest, verifyDiscordRequest } from './verifyUtils.js';
@@ -55,10 +53,6 @@ app.post('/interactions', async function (req, res) {
         return handlePreviewCommand(res, data);
       case COMMANDS_NAMES.CREATE_POLL:
         return handleCreatePollCommand(res, data, channel_id, member);
-      case COMMANDS_NAMES.GET_LIST:
-        return handleGetCommand(res);
-      case COMMANDS_NAMES.SET_LIST:
-        return handleSetCommand(res, data)
       default:
         console.error(`unknown command: ${name}`);
         return res.status(400).json({ error: 'unknown command' });
