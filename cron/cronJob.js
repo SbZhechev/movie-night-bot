@@ -8,6 +8,7 @@ const client = new Client({
 })
 
 export const createCronJob = async (pollMessageId, channelId, pollDuration, member) => {
+  console.log(pollMessageId, channelId, pollDuration, member);
   const botBaseUrl = process.env.BASE_URL;
 
   const user = member.user.id;
