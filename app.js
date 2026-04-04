@@ -24,7 +24,8 @@ app.post('/interactions', async function (req, res) {
   const isValid = verifyDiscordRequest(req);
   if (!isValid) return res.status(401).send("Invalid signature");
 
-  const { type, data, channel_id, member, message } = req.body;
+  const body = JSON.parse(req.body.toString('utf-8'));
+  const { type, data, channel_id, member, message } = body;
 
   // Handle verification requests
   if (type === InteractionType.PING) {
