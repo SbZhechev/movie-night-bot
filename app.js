@@ -29,6 +29,7 @@ app.post('/interactions', async function (req, res) {
 
   // Handle verification requests
   if (type === InteractionType.PING) {
+    console.log('Received PING, sending PONG');
     return res.send({ type: InteractionResponseType.PONG });
   }
 
