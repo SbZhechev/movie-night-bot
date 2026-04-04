@@ -2,6 +2,7 @@ import { createBasicMessageComponent } from "../../../discordUtils.js";
 import { NotFoundError } from "../../../notFoundError.js";
 import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
 import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
+import { getList, updateList } from "../../../google-sheets/utils.js";
 
 export const handleEditCommand = async (res, data) => {
   try {
@@ -11,14 +12,7 @@ export const handleEditCommand = async (res, data) => {
       throw new RangeError('You have to provide at least 1 option that needs to be changed!');
     }
 
-    const sheetsClient = await sheetsAPI();
-
-    const response = await sheetsClient.spreadsheets.values.get({
-      spreadsheetId: SPREAD_SHEET_ID,
-      range: 'Movie List'
-    });
-
-    const movies = response.data.values;
+    const movies = await getList();
 
     let movieIndex = movies.findIndex(movieData => movieData[MOVIE_PROPERTIES_MAP.TITLE].toLowerCase() === title.toLowerCase());
 
@@ -35,15 +29,7 @@ export const handleEditCommand = async (res, data) => {
 
     movies[movieIndex] = newMovie;
 
-    await sheetsClient.spreadsheets.values.update({
-      spreadsheetId: SPREAD_SHEET_ID,
-      range: 'Movie List',
-      valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        majorDimension: 'ROWS',
-        values: movies,
-      }
-    });
+    await updateList(movies);
 
     console.log(`${title} has been edited!`);
     return res.send(createBasicMessageComponent(`${title} has been edited!`, true));

@@ -4,18 +4,14 @@ import { NotFoundError } from "../../../notFoundError.js";
 import { InteractionResponseFlags, InteractionResponseType, MessageComponentTypes } from "discord-interactions";
 import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
 import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
+import { getList } from "../../../google-sheets/utils.js";
 
 export const handlePreviewCommand = async (res, data) => {
   try {
     const { size, theme, participated } = parseOptions(data.options);
-    const sheetsClient = await sheetsAPI();
 
-    const response = await sheetsClient.spreadsheets.values.get({
-      spreadsheetId: SPREAD_SHEET_ID,
-      range: 'Movie List'
-    });
+    const movies = await getList();
 
-    const movies = response.data.values;
     let pollCandidates = getMoviesForPoll({ movies, size, participated, theme });
 
     let moviesList = '';

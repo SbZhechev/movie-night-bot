@@ -1,22 +1,17 @@
-import { createBasicMessageComponent, createPollMessage } from "../../../discordUtils.js"
+import { createBasicMessageComponent, createPollMessage, endPoll } from "../../../discordUtils.js"
 import { NotFoundError } from "../../../notFoundError.js";
 import { getMoviesForPoll } from "../../../fileUtils.js";
-import { handlePollResults } from "./utils.js";
 import { DEFAULT_POLL_DURATION } from "../../../constants.js";
-import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
 import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
+import { getList } from "../../../google-sheets/utils.js";
+import { handleCreatePoll } from "../../utils.js";
 
-export const handleCreatePollCommand = async (res, data, channelId) => {
+export const handleCreatePollCommand = async (res, data, channelId, member) => {
   try {
     const { title, size, participated, theme, duration } = parseOptions(data.options);
-    const sheetsClient = await sheetsAPI();
 
-    const response = await sheetsClient.spreadsheets.values.get({
-      spreadsheetId: SPREAD_SHEET_ID,
-      range: 'Movie List'
-    });
+    const movies = await getList();
 
-    const movies = response.data.values;
     let pollOptions = getMoviesForPoll({ movies, size, participated, theme });
 
     let answers = pollOptions.map((option, index) => {
@@ -33,12 +28,8 @@ export const handleCreatePollCommand = async (res, data, channelId) => {
       allow_multiselect: true
     };
 
-    const messageResponse = await createPollMessage(channelId, pollObject);
-    const messageData = await messageResponse.json();
-    const messageId = messageData.id;
+    await handleCreatePoll(channelId, pollObject, member);
 
-    handlePollResults(channelId, messageId, duration, false, title);
-    console.log('Poll was created!')
     return res.send(createBasicMessageComponent('You got it boss!', true));
   } catch (error) {
     let errorMessage = 'Unexpected error occured while creating a poll!';

@@ -1,19 +1,13 @@
 import { NotFoundError } from "../../../notFoundError.js";
 import { createBasicMessageComponent } from "../../../discordUtils.js";
-import { sheetsAPI, SPREAD_SHEET_ID } from "../../../google-sheets/index.js";
 import { MOVIE_PROPERTIES_MAP } from "../../../constants.js";
+import { getList, updateList } from "../../../google-sheets/utils.js";
 
 export const handleDeleteCommand = async (res, data) => {
   try {
     let movieTitle = data.options[0].value;
-    const sheetsClient = await sheetsAPI();
 
-    const response = await sheetsClient.spreadsheets.values.get({
-      spreadsheetId: SPREAD_SHEET_ID,
-      range: 'Movie List'
-    });
-
-    const movies = response.data.values;
+    const movies = await getList();
 
     let movieIndex = movies.findIndex(movieData => movieData[MOVIE_PROPERTIES_MAP.TITLE].toLowerCase() === movieTitle.toLowerCase());
 
@@ -25,15 +19,7 @@ export const handleDeleteCommand = async (res, data) => {
     const emptyRow = ['', '', '', ''];
     movies.push(emptyRow);
 
-    await sheetsClient.spreadsheets.values.update({
-      spreadsheetId: SPREAD_SHEET_ID,
-      range: 'Movie List',
-      valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        majorDimension: 'ROWS',
-        values: movies,
-      }
-    });
+    await updateList(movies);
 
     console.log(`${movieTitle} removed from the list!`)
     return res.send(createBasicMessageComponent(`${movieTitle} removed from the list!`, true));
