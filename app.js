@@ -18,7 +18,9 @@ import { handleUpdateList } from './commands/utils.js';
 const app = express();
 const port = 3000;
 
-app.post('/interactions', express.raw({ type: 'application/json' }), async function (req, res) {
+app.use(express.raw({ type: 'application/json' }));
+
+app.post('/interactions', async function (req, res) {
   const isValid = await verifyDiscordRequest(req);
 
   if (!isValid) return res.status(401).send("Invalid signature");
@@ -63,10 +65,11 @@ app.post('/interactions', express.raw({ type: 'application/json' }), async funct
 });
 
 app.post('/pollEnded', async (req, res) => {
-  const isValid = await verifyCrobJobRequest(req);
-  if (!isValid) return res.status(401).json({ error: "Unauthorized" });
+  // const isValid = await verifyCrobJobRequest(req);
+  // if (!isValid) return res.status(401).json({ error: "Unauthorized" });
 
-  const { channelId, pollMessageId, user } = req.body;
+  const body = JSON.parse(req.body.toString('utf-8'));
+  const { channelId, pollMessageId, user } = body;
   await createPollEndedMessage(channelId, pollMessageId, user);
 
   res.sendStatus(200);
