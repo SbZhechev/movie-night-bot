@@ -18,9 +18,7 @@ import { handleUpdateList } from './commands/utils.js';
 const app = express();
 const port = 3000;
 
-app.use(express.raw({ type: 'application/json' }));
-
-app.post('/interactions', async function (req, res) {
+app.post('/interactions', express.raw({ type: 'application/json' }), async function (req, res) {
   const isValid = await verifyDiscordRequest(req);
 
   if (!isValid) return res.status(401).send("Invalid signature");
