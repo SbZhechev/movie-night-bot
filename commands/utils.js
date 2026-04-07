@@ -10,7 +10,7 @@ export const handleCreatePoll = async (channelId, pollObject, member) => {
   const messageId = messageData.id;
 
   console.log('Poll was created!');
-  createCronJob(messageId, channelId, pollObject.duration, member);
+  await createCronJob(messageId, channelId, pollObject.duration, member);
 }
 
 export const handleUpdateList = async (res, message, member) => {
