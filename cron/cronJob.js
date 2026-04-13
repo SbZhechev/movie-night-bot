@@ -8,7 +8,7 @@ export const createCronJob = async (pollMessageId, channelId, pollDuration, memb
 
   const payload = { pollMessageId, channelId, user };
 
-  const expirationTimestamp = new Date().getTime() + pollDuration + 1000;
+  const expirationTimestamp = new Date().getTime() + (pollDuration * 60 * 60 * 1000) + 1000;
 
   const client = new Client({
     baseUrl: process.env.QSTASH_URL,
