@@ -90,7 +90,7 @@ export async function createPollEndedMessage(channelId, pollMessageId, user) {
   const messageComponents = [
     {
       type: MessageComponentTypes.TEXT_DISPLAY,
-      content: `<@${user}> Wagwan my driller? The poll finished!`
+      content: `<@${user}> Oi, brev. The poll finished, my brev, come and update the list! And a fanta light, brevvvv.`
     },
     {
       type: MessageComponentTypes.ACTION_ROW,
